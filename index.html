@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Nassir Mohamed Ibrahim | Senior Lecturer and Researcher</title>
+    <meta name="description" content="From the shop floor to the lecture hall. Dr. Nassir Mohamed Ibrahim, Senior Lecturer at Birmingham City University, PhD holder, former JLR Technical Analyst and Adidas retail leader.">
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script crossorigin src="https://unpkg.com/framer-motion@11.0.3/dist/framer-motion.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        card: '#0c0c18',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #03030a;
+            background-image:
+                linear-gradient(rgba(59,130,246,0.022) 1px, transparent 1px),
+                linear-gradient(to right, rgba(59,130,246,0.022) 1px, transparent 1px);
+            background-size: 72px 72px;
+            color: #c8d3e0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .g-card {
+            position: relative;
+            isolation: isolate;
+        }
+        .g-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.02) 50%, rgba(59,130,246,0.07) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            transition: background 0.4s;
+        }
+        .g-card:hover::before {
+            background: linear-gradient(135deg, rgba(59,130,246,0.55) 0%, rgba(59,130,246,0.1) 60%, rgba(59,130,246,0.3) 100%);
+        }
+
+        @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+        .marquee-track { animation: marquee 42s linear infinite; display: flex; width: max-content; }
+
+        .tl-line {
+            background: linear-gradient(to bottom, transparent 0%, #1e3a5f 20%, #3b82f6 50%, #1e3a5f 80%, transparent 100%);
+        }
+
+        .glow     { text-shadow: 0 0 48px rgba(59,130,246,0.55); }
+        .glow-sm  { text-shadow: 0 0 22px rgba(59,130,246,0.4); }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #03030a; }
+        ::-webkit-scrollbar-thumb { background: #1a1a2e; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+        ::selection { background: rgba(59,130,246,0.22); color: #fff; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const { motion, AnimatePresence, useScroll, useInView, useMotionValue, useSpring } = window.Motion;
+
+    /* ── variants ── */
+    const rise = {
+        hidden: { opacity: 0, y: 44 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }
+    };
+    const riseL = {
+        hidden: { opacity: 0, x: -44 },
+        visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }
+    };
+    const riseR = {
+        hidden: { opacity: 0, x: 44 },
+        visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }
+    };
+    const cascade = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    };
+    const hov = { y: -6, transition: { type: 'spring', stiffness: 320, damping: 22 } };
+
+    /* ── SVG icons (no emojis) ── */
+    const Ic = {
+        GradCap: () => (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+        ),
+        BarChart: () => (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
+            </svg>
+        ),
+        Users: () => (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+        ),
+        Building: () => (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="18" rx="1"/>
+                <path d="M8 3v18M2 9h6M2 15h6M16 9h4M16 15h4M16 21v-6a2 2 0 0 0-4 0v6"/>
+            </svg>
+        ),
+        BookOpen: () => (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+        ),
+        Search: () => (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+        ),
+        Gear: () => (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+        ),
+        Database: () => (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+        ),
+        Tag: () => (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+        ),
+    };
+
+    /* ── splash ── */
+    const Splash = ({ onDone }) => {
+        const [splitting, setSplitting] = React.useState(false);
+
+        React.useEffect(() => {
+            const t = setTimeout(() => { setSplitting(true); onDone(); }, 1500);
+            return () => clearTimeout(t);
+        }, []);
+
+        const letters = 'NASSIR.'.split('');
+
+        return (
+            <>
+                {/* top panel */}
+                <motion.div
+                    className="fixed top-0 left-0 right-0 h-1/2 z-[500]"
+                    style={{ background: '#03030a' }}
+                    animate={{ y: splitting ? '-100%' : 0 }}
+                    transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+                />
+                {/* bottom panel */}
+                <motion.div
+                    className="fixed bottom-0 left-0 right-0 h-1/2 z-[500]"
+                    style={{ background: '#03030a' }}
+                    animate={{ y: splitting ? '100%' : 0 }}
+                    transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+                />
+                {/* text — sits above both panels */}
+                <motion.div
+                    className="fixed inset-0 z-[501] flex items-center justify-center pointer-events-none"
+                    animate={{ opacity: splitting ? 0 : 1 }}
+                    transition={{ duration: 0.15 }}
+                >
+                    <div className="text-center">
+                        <div className="flex items-center justify-center">
+                            {letters.map((l, i) => (
+                                <div key={i} style={{ overflow: 'hidden', display: 'inline-block', lineHeight: 1.05 }}>
+                                    <motion.span
+                                        initial={{ y: '108%' }}
+                                        animate={{ y: 0 }}
+                                        transition={{ delay: i * 0.06, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                                        className={`font-black tracking-tighter inline-block text-[13vw] sm:text-8xl md:text-9xl ${l === '.' ? 'text-primary glow' : 'text-white'}`}
+                                    >
+                                        {l}
+                                    </motion.span>
+                                </div>
+                            ))}
+                        </div>
+                        <motion.div
+                            initial={{ scaleX: 0, opacity: 0 }}
+                            animate={{ scaleX: 1, opacity: 1 }}
+                            transition={{ delay: 0.55, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                            className="h-px w-28 bg-primary mx-auto mt-5 origin-left"
+                        />
+                        <motion.p
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.9, duration: 0.4 }}
+                            className="text-[0.625rem] font-mono uppercase tracking-[0.3em] text-slate-600 mt-4"
+                        >
+                            Senior Lecturer · PhD · BCU
+                        </motion.p>
+                    </div>
+                </motion.div>
+            </>
+        );
+    };
+
+    /* ── progress bar ── */
+    const ProgressBar = () => {
+        const { scrollYProgress } = useScroll();
+        return (
+            <motion.div
+                className="fixed top-0 left-0 right-0 h-[2px] bg-primary origin-left z-[200]"
+                style={{ scaleX: scrollYProgress, boxShadow: '0 0 10px rgba(59,130,246,0.8)' }}
+            />
+        );
+    };
+
+    /* ── navbar ── */
+    const Navbar = () => {
+        const [open, setOpen] = React.useState(false);
+        const [solid, setSolid] = React.useState(false);
+        React.useEffect(() => {
+            const cb = () => setSolid(window.scrollY > 24);
+            window.addEventListener('scroll', cb, { passive: true });
+            return () => window.removeEventListener('scroll', cb);
+        }, []);
+        const links = ['About', 'Journey', 'Skills', 'Experience'];
+        return (
+            <motion.header
+                initial={{ y: -72, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 90, damping: 20, delay: 0.1 }}
+                className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${solid ? 'bg-[#03030a]/92 backdrop-blur-xl border-b border-white/[0.06]' : ''}`}
+            >
+                <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 flex items-center justify-between h-16">
+                    <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                        className="text-[1.1rem] font-black text-white tracking-tight select-none">
+                        Nassir<motion.span animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 2.4, repeat: Infinity }} className="text-primary glow-sm">.</motion.span>
+                    </button>
+                    <nav className="hidden md:flex items-center gap-9 text-[0.8125rem] font-semibold text-slate-400">
+                        {links.map(l => (
+                            <a key={l} href={`#${l.toLowerCase()}`} className="relative group hover:text-white transition-colors duration-200">
+                                {l}
+                                <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-primary transition-all duration-300 group-hover:w-full" />
+                            </a>
+                        ))}
+                    </nav>
+                    <a href="#contact" className="hidden md:inline-flex items-center gap-1.5 bg-primary text-black text-[0.8125rem] font-bold px-5 py-2 rounded-full hover:bg-white transition-colors duration-200">
+                        Get in Touch <span className="text-base leading-none">+</span>
+                    </a>
+                    <button onClick={() => setOpen(v => !v)} className="md:hidden p-1.5 text-white" aria-label="menu">
+                        {open
+                            ? <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/></svg>
+                            : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16"/></svg>
+                        }
+                    </button>
+                </div>
+                <AnimatePresence>
+                    {open && (
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+                            className="md:hidden border-t border-white/[0.07] bg-[#03030a]/98 backdrop-blur-xl overflow-hidden">
+                            <div className="px-6 py-7 flex flex-col gap-5 text-center">
+                                {links.map(l => (
+                                    <a key={l} href={`#${l.toLowerCase()}`} onClick={() => setOpen(false)}
+                                       className="text-slate-300 font-semibold text-base hover:text-primary transition-colors">{l}</a>
+                                ))}
+                                <a href="#contact" onClick={() => setOpen(false)} className="bg-primary text-black font-bold py-3 rounded-xl text-sm mt-1">Get in Touch</a>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </motion.header>
+        );
+    };
+
+    /* ── hero ── */
+    const Hero = () => {
+        const mx = useMotionValue(0);
+        const my = useMotionValue(0);
+        React.useEffect(() => {
+            const h = e => { mx.set((e.clientX / window.innerWidth - 0.5) * 14); my.set((e.clientY / window.innerHeight - 0.5) * 14); };
+            window.addEventListener('mousemove', h, { passive: true });
+            return () => window.removeEventListener('mousemove', h);
+        }, []);
+
+        const words = ['Dr.', 'Nassir', 'Mohamed', 'Ibrahim'];
+
+        return (
+            <section className="relative min-h-[100svh] flex flex-col justify-center pt-20 pb-24 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+
+                {/* bg orbs */}
+                <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                    <motion.div animate={{ scale: [1,1.2,1], opacity: [0.08,0.13,0.08] }} transition={{ duration: 11, repeat: Infinity }}
+                        className="absolute -top-1/4 -left-1/4 w-[80vw] h-[80vw] md:w-[50vw] md:h-[50vw] rounded-full bg-primary blur-[160px]" />
+                    <motion.div animate={{ scale: [1,1.1,1], opacity: [0.04,0.07,0.04] }} transition={{ duration: 15, repeat: Infinity, delay: 3 }}
+                        className="absolute -bottom-1/3 -right-1/4 w-[70vw] h-[70vw] md:w-[45vw] md:h-[45vw] rounded-full bg-blue-700 blur-[180px]" />
+                </div>
+
+                <div className="relative z-10 grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+
+                    {/* LEFT: name + tagline + CTAs */}
+                    <motion.div variants={cascade} initial="hidden" animate="visible" className="lg:col-span-7 space-y-7">
+                        <motion.div variants={rise} className="inline-flex items-center gap-2.5">
+                            <motion.span animate={{ scale: [1,1.6,1], opacity: [1,0.3,1] }} transition={{ duration: 2.2, repeat: Infinity }}
+                                className="w-2 h-2 rounded-full bg-primary block" />
+                            <span className="text-primary text-[0.6875rem] font-bold uppercase tracking-[0.28em]">
+                                PhD · Senior Lecturer · Birmingham City University
+                            </span>
+                        </motion.div>
+
+                        <div className="overflow-hidden">
+                            {words.map((w, i) => (
+                                <motion.span
+                                    key={w}
+                                    variants={{
+                                        hidden: { y: '110%', opacity: 0 },
+                                        visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: i * 0.1 } }
+                                    }}
+                                    className={`inline-block mr-[0.15em] text-[13vw] leading-[0.88] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[5.75rem] xl:text-[7rem] font-black tracking-tighter ${i >= 2 ? 'text-primary glow' : 'text-white'}`}
+                                >
+                                    {w}
+                                </motion.span>
+                            ))}
+                        </div>
+
+                        <motion.p variants={rise} className="text-slate-300 text-lg sm:text-xl md:text-2xl font-light leading-relaxed max-w-xl">
+                            From the <strong className="text-white font-semibold">shop floor</strong> to the{' '}
+                            <strong className="text-white font-semibold">lecture hall.</strong>{' '}
+                            A career built across three industries. A reminder that the best paths are rarely straight.
+                        </motion.p>
+
+                        <motion.div variants={rise} className="flex flex-col sm:flex-row gap-4 pt-2">
+                            <motion.a whileHover={{ scale: 1.04, boxShadow: '0 0 44px rgba(59,130,246,0.5)' }} whileTap={{ scale: 0.96 }}
+                                href="#journey"
+                                className="flex items-center justify-center gap-2.5 bg-primary text-black font-bold px-8 py-4 rounded-xl text-[0.9375rem]">
+                                Explore the Journey
+                                <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>+</motion.span>
+                            </motion.a>
+                            <motion.a whileHover={{ scale: 1.04, backgroundColor: 'rgba(255,255,255,0.06)' }} whileTap={{ scale: 0.96 }}
+                                href="https://www.linkedin.com/in/nassir1/" target="_blank" rel="noopener noreferrer"
+                                className="flex items-center justify-center gap-2.5 border border-white/[0.14] bg-white/[0.03] text-white font-semibold px-8 py-4 rounded-xl text-[0.9375rem]">
+                                LinkedIn Profile <span className="text-primary text-lg leading-none">+</span>
+                            </motion.a>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* RIGHT: credentials panel */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.8, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                        className="hidden lg:flex lg:col-span-5 flex-col gap-4"
+                    >
+                        {/* Current role card */}
+                        <div className="g-card bg-card rounded-2xl p-7 border border-primary/20">
+                            <div className="flex items-center justify-between mb-4">
+                                <span className="text-[0.625rem] font-black uppercase tracking-[0.22em] px-3 py-1 rounded-full bg-primary/20 text-primary">Current Role</span>
+                                <div className="flex items-center gap-1.5">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                                    <span className="text-[0.625rem] text-emerald-400 font-mono font-bold">NOW</span>
+                                </div>
+                            </div>
+                            <div className="text-2xl font-black text-white tracking-tight mb-1">Senior Lecturer</div>
+                            <div className="text-primary text-sm font-semibold mb-3">Birmingham City University</div>
+                            <div className="text-slate-500 text-xs font-mono">April 2024 - Present</div>
+                        </div>
+
+                        {/* PhD card */}
+                        <div className="g-card bg-card rounded-2xl p-6">
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shrink-0">
+                                    <Ic.Search />
+                                </div>
+                                <div>
+                                    <div className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-slate-600 mb-0.5">Doctorate of Philosophy</div>
+                                    <div className="text-white font-bold text-sm mb-0.5">PhD Awarded 2021</div>
+                                    <div className="text-slate-500 text-xs font-mono">Birmingham City University</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Mini stats row */}
+                        <div className="grid grid-cols-3 gap-3">
+                            {[
+                                { val: '10+', label: 'Years\nExperience' },
+                                { val: '3', label: 'Industries\nMastered' },
+                                { val: '7+', label: 'Years\nRetail Mgmt' },
+                            ].map((s, i) => (
+                                <div key={i} className="g-card bg-card rounded-xl p-4 text-center">
+                                    <div className="text-2xl font-black text-primary glow-sm">{s.val}</div>
+                                    <div className="text-[0.6rem] text-slate-500 font-mono uppercase tracking-wide mt-1 whitespace-pre-line leading-tight">{s.label}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Domains */}
+                        <div className="flex gap-2.5">
+                            {['Retail', 'Analytics', 'Academia'].map((d) => (
+                                <div key={d} className="flex-1 g-card bg-card rounded-xl px-3 py-3 text-center">
+                                    <div className="text-white font-bold text-xs">{d}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                </div>
+
+                {/* scroll cue */}
+                <motion.div
+                    animate={{ opacity: [0.3, 0.7, 0.3], y: [0, 6, 0] }}
+                    transition={{ duration: 2.2, repeat: Infinity }}
+                    className="absolute bottom-10 left-6 sm:left-10 lg:left-16 flex flex-col items-center gap-2"
+                >
+                    <div className="h-10 w-px bg-gradient-to-b from-transparent to-primary/60" />
+                    <span className="text-[0.625rem] font-mono uppercase tracking-[0.2em] text-slate-600">Scroll</span>
+                </motion.div>
+            </section>
+        );
+    };
+
+    /* ── ticker ── */
+    const Ticker = () => {
+        const items = [
+            'PhD · Birmingham City University',
+            'Senior Lecturer',
+            'Technical Analyst · Jaguar Land Rover',
+            'CRM Database Manager · Harris Lamb',
+            'Senior Sales Consultant · Adidas',
+            'Curriculum Development',
+            'KPI Optimisation',
+            'Student Mentorship',
+            'Data Analytics',
+        ];
+        const doubled = [...items, ...items];
+        return (
+            <div className="border-y border-white/[0.06] py-3.5 overflow-hidden" style={{ background: '#060610' }}>
+                <div className="marquee-track flex gap-12">
+                    {doubled.map((t, i) => (
+                        <span key={i} className="whitespace-nowrap text-[0.75rem] font-sans font-medium tracking-[0.08em] text-slate-500">
+                            <span className="text-primary/40 mr-5 font-light">/</span>{t}
+                        </span>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    /* ── stats ── */
+    const Stats = () => {
+        const data = [
+            { big: 'PhD',  small: 'Birmingham City University', label: 'Doctorate of Philosophy' },
+            { big: '10+',  small: 'Years Experience',           label: 'Across retail, analytics and academia' },
+            { big: '7+',   small: 'Years in Retail Management', label: 'Adidas Group, exceeding every target' },
+            { big: '3',    small: 'Industries Mastered',        label: 'Retail · Corporate · Academia' },
+        ];
+        return (
+            <motion.section variants={cascade} initial="hidden" whileInView="visible" viewport={{ once: false, amount: 0.15 }}
+                className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 py-20 md:py-28 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+                {data.map((s, i) => (
+                    <motion.div key={i} variants={rise} whileHover={hov} className="g-card bg-card rounded-2xl md:rounded-3xl p-6 md:p-8">
+                        <div className="text-4xl sm:text-5xl font-black text-primary glow mb-2">{s.big}</div>
+                        <div className="text-white font-bold text-sm mb-1">{s.small}</div>
+                        <div className="text-slate-600 text-[0.6875rem] font-mono leading-snug">{s.label}</div>
+                    </motion.div>
+                ))}
+            </motion.section>
+        );
+    };
+
+    /* ── journey ── */
+    const Journey = () => {
+        const chapters = [
+            {
+                span: '2012 - 2017', badge: 'RETAIL',
+                badgeColor: 'bg-slate-700/60 text-slate-300', dot: 'bg-slate-400',
+                label: 'The Foundation', title: 'Senior Sales Consultant', org: 'Adidas Group',
+                narrative: "Every expert was once a beginner. Before the PhD, before the lecture theatre, before the boardroom, there was the shop floor. Seven years at Adidas built the habits, the resilience, and the people skills that no classroom could fully replicate.",
+                points: ['Promoted for consistently exceeding sales targets', 'Drove KPIs: conversion, UPT, average selling price', 'Coached and developed new staff and trainees', 'Led district-level sales calls and banking'],
+            },
+            {
+                span: '2015 - 2016', badge: 'ANALYTICS',
+                badgeColor: 'bg-blue-900/50 text-blue-300', dot: 'bg-blue-500',
+                label: 'The Pivot', title: 'Data and CRM Analytics', org: 'Harris Lamb · Jaguar Land Rover',
+                narrative: "Recognising that data was the language of modern business, Nassir moved into corporate analytics: first building a CRM system for a leading property consultancy, then stepping into Jaguar Land Rover as a Technical Analyst delivering insights directly to senior management.",
+                points: ['Technical Analyst at Jaguar Land Rover', 'CRM database development at Harris Lamb', 'Advanced Excel, MS Access, SAGE and Agency Pilot', 'Data extraction, cleansing and reporting'],
+            },
+            {
+                span: '2016 - 2021', badge: 'RESEARCH',
+                badgeColor: 'bg-indigo-900/50 text-indigo-300', dot: 'bg-indigo-500',
+                label: 'The Pursuit', title: 'PhD Researcher', org: 'Birmingham City University',
+                narrative: "The most demanding chapter yet. Leaving the corporate world to pursue the highest academic qualification: the PhD. Five years of rigorous, original research at Birmingham City University, culminating in a doctorate that validated a lifelong commitment to learning.",
+                points: ['PhD awarded, Birmingham City University, 2021', 'Five years of deep original research', 'Academic methodology, analysis and writing', 'The intellectual foundation for an academic career'],
+            },
+            {
+                span: '2020 - 2024', badge: 'TEACHING',
+                badgeColor: 'bg-cyan-900/50 text-cyan-300', dot: 'bg-cyan-500',
+                label: 'The Evolution', title: 'Lecturer', org: 'Birmingham City University',
+                narrative: "The classroom opens. Armed with real-world experience across three industries and a freshly awarded PhD, Nassir began shaping the next generation. Unlike many academics, he brought the boardroom and the shop floor into the lecture theatre. That made all the difference.",
+                points: ['Higher education lecturing at BCU', 'Curriculum design and module development', 'Student mentorship and academic tutorials', 'Blending industry insight with academic rigour'],
+            },
+            {
+                span: 'Apr 2024 - Present', badge: 'SENIOR LECTURER',
+                badgeColor: 'bg-primary/20 text-primary', dot: 'bg-primary', isCurrent: true,
+                label: 'The Summit', title: 'Senior Lecturer', org: 'Birmingham City University',
+                narrative: "Senior Lecturer. PhD holder. Former JLR analyst. Former Adidas consultant. The journey has come full circle, and it is still being written. Dr. Nassir stands as living proof that an unconventional path, pursued with dedication, leads somewhere extraordinary.",
+                points: ['Senior Lecturer, Birmingham City University', 'PhD-level mentorship and research guidance', 'Cross-industry expertise brought to the classroom', 'An ongoing story of impact and scholarship'],
+            },
+        ];
+
+        return (
+            <section id="journey" className="scroll-mt-20 py-24 md:py-32 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+                <motion.div variants={cascade} initial="hidden" whileInView="visible" viewport={{ once: false, amount: 0.05 }} className="space-y-20">
+                    <motion.div variants={rise} className="text-center max-w-3xl mx-auto space-y-5">
+                        <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-[0.6875rem] font-bold text-primary uppercase tracking-[0.25em]">02 / The Journey</span>
+                        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-[0.92]">
+                            Every Stop<br/>Was the <span className="text-primary glow">Destination</span>
+                        </h2>
+                        <p className="text-slate-400 text-lg md:text-xl font-light leading-relaxed">
+                            No path to greatness is straight. Dr. Nassir's career is proof that diverse experience is not a detour. It is the entire point.
+                        </p>
+                    </motion.div>
+
+                    <div className="relative">
+                        <div className="absolute left-5 md:left-1/2 top-0 bottom-0 w-px tl-line md:-translate-x-1/2" />
+                        <div className="space-y-10 md:space-y-0">
+                            {chapters.map((ch, i) => {
+                                const even = i % 2 === 0;
+                                return (
+                                    <motion.div key={i}
+                                        variants={even ? riseL : riseR}
+                                        viewport={{ once: false, amount: 0.1 }}
+                                        initial="hidden" whileInView="visible"
+                                        className={`relative flex items-start pl-14 md:pl-0 md:pb-12 ${even ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+
+                                        <div className={`absolute left-[13px] md:left-1/2 md:-translate-x-1/2 top-7 z-10 w-4 h-4 rounded-full ${ch.dot} ring-2 ring-[#03030a]`}
+                                             style={{ boxShadow: '0 0 14px rgba(59,130,246,0.5)' }} />
+
+                                        <motion.div
+                                            whileHover={{ y: -6, transition: { type: 'spring', stiffness: 300, damping: 22 } }}
+                                            className={`g-card bg-card rounded-2xl md:rounded-3xl p-7 md:p-9 w-full md:w-[calc(50%-2.5rem)] ${even ? 'md:mr-auto' : 'md:ml-auto'}`}>
+
+                                            <div className="flex justify-between items-start flex-wrap gap-2 mb-5">
+                                                <span className={`text-[0.625rem] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full ${ch.badgeColor}`}>{ch.badge}</span>
+                                                <div className="text-right">
+                                                    <div className="text-primary font-mono text-[0.6875rem] font-bold">{ch.span}</div>
+                                                    {ch.isCurrent && (
+                                                        <div className="flex items-center gap-1 justify-end mt-1">
+                                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                                                            <span className="text-[0.625rem] text-emerald-400 font-mono font-bold">NOW</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="text-[0.625rem] uppercase tracking-[0.22em] text-slate-600 font-bold mb-1">{ch.label}</div>
+                                            <h3 className="text-xl md:text-2xl font-black text-white tracking-tight mb-1">{ch.title}</h3>
+                                            <p className="text-primary text-[0.8125rem] font-semibold mb-5">{ch.org}</p>
+                                            <p className="text-slate-400 text-sm leading-relaxed mb-6">{ch.narrative}</p>
+                                            <ul className="space-y-2.5">
+                                                {ch.points.map((pt, j) => (
+                                                    <li key={j} className="flex items-start gap-2.5 text-[0.8125rem] text-slate-400">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-primary/60 mt-1.5 shrink-0" />{pt}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </motion.div>
+
+                                        <div className="hidden md:block w-[calc(50%-2.5rem)] shrink-0" />
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </motion.div>
+            </section>
+        );
+    };
+
+    /* ── about ── */
+    const About = () => (
+        <section id="about" className="scroll-mt-20 py-24 md:py-32 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+
+            <motion.div initial={{ opacity: 0, y: 44 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }} transition={{ duration: 0.85, ease: [0.22,1,0.36,1] }}
+                className="relative mb-20 rounded-3xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.14] via-[#03030a] to-[#03030a]" />
+                <div className="absolute inset-0 border border-primary/[0.18] rounded-3xl pointer-events-none" />
+                <div className="relative px-8 py-14 md:px-16 md:py-20 text-center space-y-3">
+                    <div className="text-[0.6875rem] font-mono font-bold uppercase tracking-[0.3em] text-primary/55 mb-6">A Career Philosophy</div>
+                    <blockquote className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight max-w-4xl mx-auto">
+                        "The shop floor teaches you what <span className="text-primary glow">no classroom</span> ever will."
+                    </blockquote>
+                    <p className="text-slate-600 text-sm font-mono pt-4 uppercase tracking-widest">
+                        The thinking behind a multi-dimensional career
+                    </p>
+                </div>
+            </motion.div>
+
+            <motion.div variants={cascade} initial="hidden" whileInView="visible" viewport={{ once: false, amount: 0.1 }}
+                className="grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
+
+                <motion.div variants={riseL} className="space-y-6">
+                    <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-primary/10 border border-primary/[0.18]">
+                        <span className="w-2 h-2 rounded-full bg-primary animate-ping" />
+                        <span className="text-[0.6875rem] font-bold text-primary uppercase tracking-[0.25em]">03 / About</span>
+                    </div>
+                    <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
+                        The Man Behind<br/>the Credentials
+                    </h2>
+                    <div className="space-y-5 text-slate-300 text-base sm:text-lg font-light leading-relaxed">
+                        <p>
+                            Dr. Nassir Mohamed Ibrahim did not take the conventional route to academia. That is precisely what makes him exceptional. His career is a masterclass in reinvention: starting in high-volume retail management, pivoting into corporate data analytics, and ultimately earning a PhD before becoming Senior Lecturer at Birmingham City University.
+                        </p>
+                        <p>
+                            Today he stands at the intersection of real-world business experience and academic rigour. While many academics have only ever <em className="text-white not-italic">studied</em> the industries they teach, Dr. Nassir has <em className="text-white not-italic">lived</em> them: from driving KPIs on the Adidas shop floor to extracting complex insights for Jaguar Land Rover's senior leadership.
+                        </p>
+                        <p>
+                            This rare breadth makes him a <strong className="text-white font-semibold">bridge</strong> between the world students will enter and the academic frameworks they need to master it.
+                        </p>
+                    </div>
+                </motion.div>
+
+                <motion.div variants={riseR} className="space-y-3.5">
+                    {[
+                        { flag: 'Current',    title: 'Senior Lecturer, BCU',        sub: 'April 2024 - Present',          dot: 'bg-emerald-400', ping: true },
+                        { flag: 'PhD',        title: 'Birmingham City University',  sub: 'Awarded May 2021',               dot: 'bg-primary',     ping: false },
+                        { flag: 'Corporate',  title: 'Jaguar Land Rover',           sub: 'Technical Analyst · 2015-16',   dot: 'bg-blue-500',    ping: false },
+                        { flag: 'Foundation', title: 'Adidas Group',                sub: 'Senior Sales Consultant · 7+ years', dot: 'bg-slate-500', ping: false },
+                    ].map((item, i) => (
+                        <motion.div key={i}
+                            whileHover={{ x: 6, backgroundColor: 'rgba(59,130,246,0.05)', transition: { duration: 0.2 } }}
+                            className="g-card bg-card rounded-2xl px-6 py-5 flex items-center gap-5">
+                            <div className="relative shrink-0">
+                                <div className={`w-3 h-3 rounded-full ${item.dot}`} />
+                                {item.ping && <div className={`absolute inset-0 w-3 h-3 rounded-full ${item.dot} animate-ping opacity-60`} />}
+                            </div>
+                            <div>
+                                <div className="text-[0.625rem] font-bold uppercase tracking-[0.22em] text-slate-600 mb-0.5">{item.flag}</div>
+                                <div className="text-white font-bold text-sm">{item.title}</div>
+                                <div className="text-slate-500 text-[0.6875rem] font-mono">{item.sub}</div>
+                            </div>
+                        </motion.div>
+                    ))}
+                    <motion.a whileHover={{ scale: 1.02, boxShadow: '0 0 28px rgba(59,130,246,0.2)' }} whileTap={{ scale: 0.97 }}
+                        href="https://www.linkedin.com/in/nassir1/" target="_blank" rel="noopener noreferrer"
+                        className="mt-2 flex items-center justify-center gap-2.5 w-full bg-primary/[0.07] border border-primary/25 text-primary px-6 py-4 rounded-2xl font-semibold text-sm hover:bg-primary/[0.12] transition-colors">
+                        View full LinkedIn profile <span className="text-base">+</span>
+                    </motion.a>
+                </motion.div>
+            </motion.div>
+        </section>
+    );
+
+    /* ── skills ── */
+    const Skills = () => {
+        const areas = [
+            {
+                num: '01', Icon: Ic.GradCap,
+                title: 'Academia and Research', sub: 'Shaping the next generation',
+                glowClass: 'group-hover:shadow-[0_0_50px_rgba(99,102,241,0.1)]', titleHover: 'group-hover:text-indigo-400',
+                skills: ['Higher Education Lecturing', 'PhD-Level Research', 'Student Mentorship and Tutoring', 'Curriculum Design and Development', 'Assessment Writing and Marking'],
+            },
+            {
+                num: '02', Icon: Ic.BarChart,
+                title: 'Data and Analytics', sub: 'Insight extracted from complexity',
+                glowClass: 'group-hover:shadow-[0_0_50px_rgba(59,130,246,0.1)]', titleHover: 'group-hover:text-primary',
+                skills: ['Complex Data Set Analysis', 'Advanced Microsoft Excel', 'CRM Database Management', 'Data Extraction and Cleansing', 'SAGE and Agency Pilot Software'],
+            },
+            {
+                num: '03', Icon: Ic.Users,
+                title: 'Management and Strategy', sub: 'Leadership forged in experience',
+                glowClass: 'group-hover:shadow-[0_0_50px_rgba(34,211,238,0.1)]', titleHover: 'group-hover:text-cyan-400',
+                skills: ['KPI Optimisation and Performance', 'Stakeholder Influence and Reporting', 'Cross-Functional Collaboration', 'Team Coaching and Training', 'Sales Management and Reconciliation'],
+            },
+        ];
+
+        return (
+            <section id="skills" className="scroll-mt-20 py-24 md:py-32 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+                <motion.div variants={cascade} initial="hidden" whileInView="visible" viewport={{ once: false, amount: 0.1 }} className="space-y-16">
+                    <motion.div variants={rise} className="text-center max-w-2xl mx-auto space-y-4">
+                        <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-[0.6875rem] font-bold text-primary uppercase tracking-[0.25em]">04 / Skills</span>
+                        <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tighter leading-[0.92]">
+                            Three Worlds.<br/><span className="text-primary glow">One Professional.</span>
+                        </h2>
+                        <p className="text-slate-400 font-light text-base sm:text-lg">
+                            A rare combination of academic depth, analytical precision, and real-world management.
+                        </p>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-3 gap-5 md:gap-6">
+                        {areas.map((a, i) => (
+                            <motion.div key={i} variants={rise}
+                                whileHover={{ y: -9, transition: { type: 'spring', stiffness: 300, damping: 22 } }}
+                                className={`g-card bg-card rounded-3xl p-9 group cursor-default transition-shadow duration-500 ${a.glowClass}`}>
+                                <div className="flex items-start justify-between mb-8">
+                                    <div className={`p-3.5 rounded-2xl border border-white/[0.08] bg-white/[0.04] text-slate-300 group-hover:text-primary transition-colors duration-300`}>
+                                        <a.Icon />
+                                    </div>
+                                    <span className="text-[3.5rem] font-black text-white/[0.04] group-hover:text-white/[0.08] transition-colors font-mono leading-none">{a.num}</span>
+                                </div>
+                                <h3 className={`text-lg font-black text-white mb-1 transition-colors duration-300 ${a.titleHover}`}>{a.title}</h3>
+                                <p className="text-[0.6875rem] uppercase tracking-[0.2em] text-slate-600 font-bold mb-7">{a.sub}</p>
+                                <ul className="space-y-3">
+                                    {a.skills.map((sk, j) => (
+                                        <li key={j} className="flex items-center gap-3 text-[0.8125rem] text-slate-400">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-primary/55 shrink-0" />{sk}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+            </section>
+        );
+    };
+
+    /* ── experience ── */
+    const Experience = () => {
+        const roles = [
+            {
+                cat: 'ACADEMIA', Icon: Ic.Building, current: true,
+                title: 'Senior Lecturer', org: 'Birmingham City University', date: 'Apr 2024 - Present',
+                pts: ['Leading higher education modules at BCU', 'Senior academic with full PhD-level expertise', 'Shaping curriculum and academic standards', 'Mentoring undergrad and postgrad students'],
+            },
+            {
+                cat: 'ACADEMIA', Icon: Ic.BookOpen, current: false,
+                title: 'Lecturer', org: 'Birmingham City University', date: 'Aug 2020 - Apr 2024',
+                pts: ['Delivered lectures and tutorials in higher education', 'Developed assessment and course materials', 'Supported student academic development and progress', 'Built teaching craft alongside ongoing research'],
+            },
+            {
+                cat: 'RESEARCH', Icon: Ic.Search, current: false,
+                title: 'PhD Researcher', org: 'Birmingham City University', date: 'Oct 2016 - May 2021',
+                pts: ['PhD awarded, Birmingham City University, 2021', 'Five years of rigorous, original academic research', 'Developed expertise in research methodology', 'Laid the intellectual foundation for an academic career'],
+            },
+            {
+                cat: 'ANALYTICS', Icon: Ic.Gear, current: false,
+                title: 'Technical Analyst', org: 'Jaguar Land Rover', date: '2015 - 2016',
+                pts: ['Data analysis reports for senior management', 'Derived strategic insights from complex datasets', 'Advanced Microsoft Excel practitioner', 'Implemented analytical issue-prompting capabilities'],
+            },
+            {
+                cat: 'CRM / DATA', Icon: Ic.Database, current: false,
+                title: 'CRM Database Manager', org: 'Harris Lamb', date: '2015',
+                pts: ['Developed CRM database for leading property consultancy', 'Data categorisation and cleansing via Excel and MS Access', 'Migrated structured data into SAGE', 'Utilised Agency Pilot property management software'],
+            },
+            {
+                cat: 'RETAIL', Icon: Ic.Tag, current: false,
+                title: 'Senior Sales Consultant', org: 'Adidas Group', date: 'Jul 2012 - Mar 2017',
+                pts: ['Promoted after 7 years of exceeding all performance targets', 'Drove KPIs: conversion, units per transaction, avg selling price', 'Managed cash handling and end-of-day banking', 'Coached staff and led district-level sales calls'],
+            },
+        ];
+
+        return (
+            <section id="experience" className="scroll-mt-20 py-24 md:py-32 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+                <motion.div variants={cascade} initial="hidden" whileInView="visible" viewport={{ once: false, amount: 0.05 }} className="space-y-14">
+                    <motion.div variants={rise} className="text-center max-w-2xl mx-auto space-y-4">
+                        <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-[0.6875rem] font-bold text-primary uppercase tracking-[0.25em]">05 / Career</span>
+                        <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tighter leading-[0.92]">
+                            Full Career<br/>Record
+                        </h2>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                        {roles.map((r, i) => (
+                            <motion.div key={i} variants={rise}
+                                whileHover={{ y: -7, boxShadow: '0 20px 50px -10px rgba(59,130,246,0.18)', transition: { type: 'spring', stiffness: 300, damping: 22 } }}
+                                className="g-card bg-card rounded-3xl p-7 md:p-9 relative overflow-hidden group flex flex-col">
+
+                                <div className="flex justify-between items-start gap-3 mb-5">
+                                    <motion.div whileHover={{ rotate: 12, scale: 1.1 }}
+                                        className="bg-white/[0.05] p-3.5 rounded-2xl border border-white/[0.07] text-slate-400 group-hover:text-primary transition-colors duration-300">
+                                        <r.Icon />
+                                    </motion.div>
+                                    <div className="text-right">
+                                        <div className="inline-block px-2.5 py-0.5 rounded-md bg-primary text-black text-[0.5625rem] font-black tracking-[0.15em] uppercase mb-1">{r.cat}</div>
+                                        <div className="text-primary font-mono text-[0.6875rem] font-bold block">{r.date}</div>
+                                        {r.current && (
+                                            <div className="flex items-center gap-1 justify-end mt-1">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                                                <span className="text-[0.5625rem] text-emerald-400 font-mono font-bold">NOW</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <h3 className="text-2xl md:text-[1.6rem] font-black text-white tracking-tight group-hover:text-primary transition-colors duration-300 mb-1">{r.title}</h3>
+                                <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-slate-600 mb-5">{r.org}</p>
+
+                                <ul className="mt-auto space-y-2.5">
+                                    {r.pts.map((pt, j) => (
+                                        <li key={j} className="flex items-start gap-3 text-[0.8125rem] text-slate-400 leading-snug">
+                                            <span className="text-primary text-xs mt-[3px] shrink-0">+</span>{pt}
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none" />
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+            </section>
+        );
+    };
+
+    /* ── footer ── */
+    const Footer = () => (
+        <footer id="contact" className="relative z-10 border-t border-white/[0.06]">
+            <div className="py-24 md:py-32 text-center max-w-4xl mx-auto px-6 sm:px-10 space-y-7">
+                <motion.div initial={{ opacity: 0, y: 44 }} whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }} transition={{ duration: 0.85, ease: [0.22,1,0.36,1] }}
+                    className="space-y-5">
+                    <span className="inline-block text-[0.6875rem] font-mono font-bold uppercase tracking-[0.3em] text-primary/55">/ Connect</span>
+                    <h2 className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter leading-[0.9]">
+                        Let's<br/><span className="text-primary glow">Connect</span>
+                    </h2>
+                    <p className="text-slate-400 text-lg md:text-xl font-light max-w-xl mx-auto leading-relaxed">
+                        Whether you are a student, researcher, or someone inspired by an unconventional path, Dr. Nassir's story shows what is possible when you never stop growing.
+                    </p>
+                </motion.div>
+
+                <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }} transition={{ delay: 0.2, duration: 0.7, ease: [0.22,1,0.36,1] }}
+                    className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <motion.a whileHover={{ scale: 1.05, boxShadow: '0 0 50px rgba(59,130,246,0.4)' }} whileTap={{ scale: 0.96 }}
+                        href="https://www.linkedin.com/in/nassir1/" target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2.5 bg-primary text-black font-black px-10 py-5 rounded-full text-base hover:bg-white transition-colors">
+                        Connect on LinkedIn +
+                    </motion.a>
+                    <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}
+                        href="#journey"
+                        className="inline-flex items-center gap-2 border border-white/[0.12] text-white/60 hover:text-white font-semibold px-8 py-5 rounded-full text-sm transition-colors bg-white/[0.02]">
+                        Back to Journey
+                    </motion.a>
+                </motion.div>
+            </div>
+
+            <div className="border-t border-white/[0.05] py-7 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 flex flex-col sm:flex-row items-center justify-between gap-3 text-[0.6875rem] font-mono text-slate-700">
+                <div className="text-lg font-black text-white/20 tracking-tight">Nassir<span className="text-primary/35">.</span></div>
+                <span>© {new Date().getFullYear()} Dr. Nassir Mohamed Ibrahim. All rights reserved.</span>
+                <span className="uppercase tracking-[0.18em]">Birmingham City University</span>
+            </div>
+        </footer>
+    );
+
+    /* ── app ── */
+    const App = () => {
+        const [splashDone, setSplashDone] = React.useState(false);
+        return (
+            <div className="relative min-h-screen overflow-x-hidden">
+                <Splash onDone={() => setSplashDone(true)} />
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: splashDone ? 1 : 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <ProgressBar />
+                    <Navbar />
+                    <main>
+                        <Hero />
+                        <Ticker />
+                        <Stats />
+                        <Journey />
+                        <About />
+                        <Skills />
+                        <Experience />
+                    </main>
+                    <Footer />
+                </motion.div>
+            </div>
+        );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
